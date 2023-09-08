@@ -8,23 +8,21 @@ app.get("/", (req, res) => {
   res.send("Hello from the the développeur star ⭐");
 });
 
+// ! Test these routes
 app.get("/health", (req, res) => {
   res.sendStatus(200);
 });
 
 app.get("/secret", (req, res) => {
   console.log("SECRET_ENV", SECRET_ENV);
+  if (req?.body?.test) res.sendStatus(201);
   res.sendStatus(200);
 });
 
+// ! Don't fix and test these routes
 app.get("/bug", (req, res) => {
   console.log(a.b);
   res.sendStatus(200);
-});
-
-app.get("/double_res_send", (req, res) => {
-  res.send("TEST ERROR");
-  res.send("TEST ERROR 2");
 });
 
 app.get("/crash_app", (req, res) => {
