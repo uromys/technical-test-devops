@@ -2,7 +2,7 @@ const express = require("express");
 
 const app = express();
 const PORT = 3000;
-const SECRET_ENV = "secret";
+const SECRET_ENV = process.env.SECRET_ENV;
 
 app.get("/", (req, res) => {
   res.send("Hello from the the développeur star ⭐");
