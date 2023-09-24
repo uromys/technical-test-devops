@@ -17,8 +17,11 @@ jobs:
       - name: Build Docker Image
         run: docker build -t selego-docker:latest . --platform=linux/amd64
 
-      - name: Push Docker Image to GitHub Packages
-        run: |
-          echo ${{ secrets.TOKEN_GITHUB }} | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-          docker tag selego-docker:latest docker.pkg.github.com/uromys/selego-docker/selego-docker:latest
-          docker push docker.pkg.github.com/uromys/selego-docker/selego-docker:latest
+      - name: Log into Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Tag Docker Image
+        run: docker tag selego-docker:latest ${{ secrets.DOCKER_USERNAME }}/selego-docker:latest
+
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/selego-docker:latest
