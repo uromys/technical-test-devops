@@ -1,0 +1,24 @@
+name: CI/CD with Docker
+
+on:
+  push:
+    branches:
+      - main 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: docker build -t selego-docker:latest . --platform=linux/amd64
+
+      - name: Push Docker Image to GitHub Packages
+        run: |
+          echo ${{ secrets.TOKEN_GITHUB }} | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          docker tag selego-docker:latest docker.pkg.github.com/uromys/selego-docker/selego-docker:latest
+          docker push docker.pkg.github.com/uromys/selego-docker/selego-docker:latest
