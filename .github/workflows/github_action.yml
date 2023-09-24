@@ -25,5 +25,7 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/selego-docker:latest
+      - name: Install Node.js dependencies
+        run: docker run --rm -v "$(pwd):/app" -w /app selego-docker:latest npm install
       - name: Run Tests
         run: docker run --rm -v "$(pwd):/app" -w /app selego-docker:latest npm test
