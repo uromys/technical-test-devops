@@ -1,12 +1,36 @@
 const express = require("express");
+import * as Sentry from "@sentry/node";
+import { ProfilingIntegration } from "@sentry/profiling-node";
+
+
 
 const app = express();
 const PORT = 3000;
 const SECRET_ENV = process.env.SECRET_ENV;
 
+
+Sentry.init({
+  dsn: 'https://6b97ee124902fc9b29fc3a4045565668@o4505942471016448.ingest.sentry.io/4505942475997184',
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    // enable Express.js middleware tracing
+    new Sentry.Integrations.Express({ app }),
+    new ProfilingIntegration(),
+  ],
+  // Performance Monitoring
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0, 
+});
+
 app.get("/", (req, res) => {
   res.send("Hello from the the développeur star ⭐");
 });
+
+app.use(Sentry.Handlers.requestHandler());
+
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler());
+
 
 // ! Test these routes
 app.get("/health", (req, res) => {
@@ -39,8 +63,19 @@ app.get("/error", (req, res) => {
   throw new Error("This is a deliberate error!");
 });
 
+
+app.use(Sentry.Handlers.errorHandler());
+app.use(function onError(err, req, res, next) {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500;
+  res.end(res.sentry + "\n");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
 
 module.exports = app;
