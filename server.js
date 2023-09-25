@@ -1,6 +1,7 @@
 const express = require("express");
-import * as Sentry from "@sentry/node";
-import { ProfilingIntegration } from "@sentry/profiling-node";
+const Sentry = require("@sentry/node");
+const { ProfilingIntegration } = require("@sentry/profiling-node");
+
 
 
 

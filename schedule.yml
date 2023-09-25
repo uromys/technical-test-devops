@@ -1,0 +1,15 @@
+apiVersion: batch/v1beta1
+kind: ScheduledJob
+metadata:
+  name: scale-node-server
+spec:
+  schedule: "0 0-8 * * *" 
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: scale-node-server
+              image: selego-kube-image:tag # Use an image with kubectl installed
+              command: ["kubectl", "scale", "--replicas=1", "deployment/node-server"]
+          restartPolicy: OnFailure

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-server
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: node-server
+  template:
+    metadata:
+      labels:
+        app: node-server
+    spec:
+      containers:
+        - name: node-server
+          image: uromys/selego-docker:v1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: SECRET_ENV
+              value: {API_KEY SET UP IN ENV OR GET IN AWS OR GITHUB ACTION}

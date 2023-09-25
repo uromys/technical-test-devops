@@ -20,12 +20,22 @@ jobs:
       - name: Log into Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Install Node.js dependencies
+        run: docker run --rm -v "$(pwd):/app" -w /app selego-docker:latest npm install
+      - name: Run Tests
+        run: docker run --rm -v "$(pwd):/app" -w /app selego-docker:latest npm test
       - name: Tag Docker Image
         run: docker tag selego-docker:latest ${{ secrets.DOCKER_USERNAME }}/selego-docker:latest
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/selego-docker:latest
-      - name: Install Node.js dependencies
-        run: docker run --rm -v "$(pwd):/app" -w /app selego-docker:latest npm install
-      - name: Run Tests
-        run: docker run --rm -v "$(pwd):/app" -w /app selego-docker:latest npm test
+      - name: Check Test Results
+        run: |
+          ./testapi.sh
+          exit_code=$?
+          if [ $exit_code -eq 0 ]; then
+            echo "Tests passed successfully."
+          else
+            echo "Tests failed with exit code $exit_code."
+            exit 1  # Fail the workflow
+          fi

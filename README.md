@@ -41,3 +41,9 @@
 ### PS :
 
 L’usage de méthodes de génération de code automatique est autorisé voire même fortement recommandée afin de gagner du temps
+
+
+
+
+
+

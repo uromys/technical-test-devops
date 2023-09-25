@@ -1,5 +1,7 @@
 node_modules/
 package-lock.json
 .env
+.sentryclirc
+
 # Sentry Auth Token
 .sentryclirc
